@@ -2,7 +2,7 @@
 # CMDA 3634 PSA01 : OpenMP 5-Center Problem
 
 **Author:** Jason Bruno Terceros  
-**Course:** CMDA 3634 – Parallel Programming  
+**Course:** CMDA 3634 – Comp Sci Foundations  
 **Date:** January 2024 - February 2024
 
 ## 📌 Overview
