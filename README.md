@@ -1,0 +1,1 @@
+# PSA01_OpenMP_5center
