@@ -56,68 +56,76 @@ We parallelize the outermost loop with `#pragma omp for`. The key modifications 
 
 The program was run for 1, 2, and 4 threads using both scheduling policies. Below are the elapsed times and speedups.
 
-Static schedule
-Threads	Elapsed time (s)	Speedup
-1	18.7915	1.00
-2	–	–
-4	14.4549	1.30
-Dynamic schedule
-Threads	Elapsed time (s)	Speedup
-1	18.7572	1.00
-2	–	–
-4	5.29484	3.54
-Note: Speedup = time(1 thread) / time(P threads).
-Dynamic schedule shows near‑linear speedup (3.54 with 4 threads), while static achieves only 1.30.
+### Static schedule
+| Threads | Elapsed time (s) | Speedup |
+|---------|------------------|---------|
+| 1 | 18.7915 | 1.00 |
+| 2 | – | – |
+| 4 | 14.4549 | 1.30 |
 
-📈 Analysis
-Why is dynamic scheduling so much faster?
+### Dynamic schedule
+| Threads          | Elapsed time (s) | Speedup |
+|-------------------|--------------|--------|
+| 1 | 18.7572 | 1.00 |
+| 2 | – | – |
+| 4 | 5.29484 | 3.54 |
+
+> **Note:** Speedup = time(1 thread) / time(P threads).
+> Dynamic schedule shows near‑linear speedup (3.54 with 4 threads), while static achieves only 1.30.
+
+---
+
+## 📈 Analysis
+### Why is dynamic scheduling so much faster?
+
 The workload of the 5‑center problem is unbalanced – some 5‑tuples are pruned early (by the dropout optimization), others run to completion.
+- **Static schedule** divides the iteration space evenly among threads. Because some threads get “hard” (long‑running) chunks and others easy ones, the slowest thread dominates the total time.
+- **Dynamic schedule** (`schedule(dynamic)`) assigns chunks to threads as they become free, achieving a much better load balance. The output shows that for 4 threads, dynamic gives roughly equal numbers of checked tuples per thread, whereas static leaves some threads with far fewer tuples – but their waiting time is not recovered.
 
-Static schedule divides the iteration space evenly among threads. Because some threads get “hard” (long‑running) chunks and others easy ones, the slowest thread dominates the total time.
+> This explains the dramatic speedup improvement (3.54 vs 1.30).
 
-Dynamic schedule (schedule(dynamic)) assigns chunks to threads as they become free, achieving a much better load balance. The output shows that for 4 threads, dynamic gives roughly equal numbers of checked tuples per thread, whereas static leaves some threads with far fewer tuples – but their waiting time is not recovered.
-
-This explains the dramatic speedup improvement (3.54 vs 1.30).
-
-Thread safety
+### Thread safety
 We ensured correctness by:
+- Using private copies of `min_cost_sq`, `num_checked`, and `optimal` for each thread
+- Reducing all intermediate results into the shared variables inside a critical section, so updates are atomic
+- The loop indices (`i,j,k,l,m`) are automatically private to each thread.
 
-Using private copies of min_cost_sq, num_checked, and optimal for each thread.
-
-Reducing all intermediate results into the shared variables inside a critical section, so updates are atomic.
-
-The loop indices (i,j,k,l,m) are automatically private to each thread.
-
-Minimal cost
+### Minimal cost
 Regardless of thread count or schedule, the computed minimal cost is identical. The optimal centers may differ because when multiple 5‑tuples tie for the same cost, the first one found (which depends on execution order) is recorded.
 
-🚀 How to Compile and Run
-Clone the repository and navigate to the src/ folder.
+---
 
-Compile with OpenMP (example using gcc):
+## 🚀 How to Compile and Run
 
-bash
-# Static schedule
-gcc -fopenmp -O2 omp_5center.c -o omp_5center_static
+1. Clone the repository and navigate to the src/ folder.
+2. Compile with OpenMP (example using gcc):
+   
+  ```bash
+  # Static schedule
+  gcc -fopenmp -O2 omp_5center.c -o omp_5center_static
+  
+  # Dynamic schedule
+  gcc -fopenmp -O2 -DDYNAMIC omp_5center.c -o omp_5center_dynamic
+  ```
+3. Run for different thread counts:
+   
+  ```bash
+  export OMP_NUM_THREADS=1
+  ./omp_5center_static
+  
+  export OMP_NUM_THREADS=2
+  ./omp_5center_static
+  
+  export OMP_NUM_THREADS=4
+  ./omp_5center_static
+  ```
+  (Repeat for _dynamic)
 
-# Dynamic schedule
-gcc -fopenmp -O2 -DDYNAMIC omp_5center.c -o omp_5center_dynamic
-Run for different thread counts:
+4. The program will output the minimal cost, the optimal centers, the number of tuples checked, and the execution time
 
-bash
-export OMP_NUM_THREADS=1
-./omp_5center_static
+---
 
-export OMP_NUM_THREADS=2
-./omp_5center_static
-
-export OMP_NUM_THREADS=4
-./omp_5center_static
-(Repeat for _dynamic)
-
-The program will output the minimal cost, the optimal centers, the number of tuples checked, and the execution time.
-
-📁 Repository Contents
+## 📁 Repository Contents
 src/omp_5center.c – Parallel OpenMP implementation.
 
 images/Static.png – Screenshot of static schedule output.
