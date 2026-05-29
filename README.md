@@ -127,6 +127,8 @@ Regardless of thread count or schedule, the computed minimal cost is identical. 
 - src/omp_5center.c – Parallel OpenMP implementation
 - images/Static.png – Screenshot of static schedule output
 - images/Dynamic.png – Screenshot of dynamic schedule output
+- CMDA_3634_PSA01__OpenMP_5_center.pdf
+- main.tex (main file)
 - README.md – This file
 
 ---
