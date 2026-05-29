@@ -99,26 +99,24 @@ Regardless of thread count or schedule, the computed minimal cost is identical. 
 
 1. Clone the repository and navigate to the src/ folder.
 2. Compile with OpenMP (example using gcc):
-   
-  ```bash
-  # Static schedule
-  gcc -fopenmp -O2 omp_5center.c -o omp_5center_static
-  
-  # Dynamic schedule
-  gcc -fopenmp -O2 -DDYNAMIC omp_5center.c -o omp_5center_dynamic
-  ```
+    ```bash
+    # Static schedule
+    gcc -fopenmp -O2 omp_5center.c -o omp_5center_static
+    
+    # Dynamic schedule
+    gcc -fopenmp -O2 -DDYNAMIC omp_5center.c -o omp_5center_dynamic
+    ```
 3. Run for different thread counts:
-   
-  ```bash
-  export OMP_NUM_THREADS=1
-  ./omp_5center_static
-  
-  export OMP_NUM_THREADS=2
-  ./omp_5center_static
-  
-  export OMP_NUM_THREADS=4
-  ./omp_5center_static
-  ```
+    ```bash
+    export OMP_NUM_THREADS=1
+    ./omp_5center_static
+    
+    export OMP_NUM_THREADS=2
+    ./omp_5center_static
+    
+    export OMP_NUM_THREADS=4
+    ./omp_5center_static
+    ```
   (Repeat for _dynamic)
 
 4. The program will output the minimal cost, the optimal centers, the number of tuples checked, and the execution time
@@ -126,14 +124,15 @@ Regardless of thread count or schedule, the computed minimal cost is identical. 
 ---
 
 ## 📁 Repository Contents
-src/omp_5center.c – Parallel OpenMP implementation.
+- src/omp_5center.c – Parallel OpenMP implementation
+- images/Static.png – Screenshot of static schedule output
+- images/Dynamic.png – Screenshot of dynamic schedule output
+- README.md – This file
 
-images/Static.png – Screenshot of static schedule output.
+---
 
-images/Dynamic.png – Screenshot of dynamic schedule output.
-
-README.md – This file.
-
-👤 Author
-Jason Bruno Terceros – GitHub Profile
-CMDA 3634 – Parallel Programming
+## 👤 Author
+**Jason Bruno Terceros** – GitHub Profile
+> Course: CMDA 3634 – Comp Sci Foundations
+> Instructor: 
+> Virginia Tech
