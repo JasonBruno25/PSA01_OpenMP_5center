@@ -134,5 +134,4 @@ Regardless of thread count or schedule, the computed minimal cost is identical. 
 ## 👤 Author
 **Jason Bruno Terceros** – GitHub Profile
 > Course: CMDA 3634 – Comp Sci Foundations
-> Instructor: 
 > Virginia Tech
